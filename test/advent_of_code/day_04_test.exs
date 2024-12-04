@@ -3,19 +3,41 @@ defmodule AdventOfCode.Day04Test do
 
   import AdventOfCode.Day04
 
-  @tag :skip
   test "part1" do
-    input = nil
-    expected_result = nil
+    input =
+      """
+      MMMSXXMASM
+      MSAMXMSMSA
+      AMXSXMAAMM
+      MSAMASMSMX
+      XMASAMXAMM
+      XXAMMXXAMA
+      SMSMSASXSS
+      SAXAMASAAA
+      MAMMMXMMMM
+      MXMXAXMASX
+      """
+    expected_result = 18
     result = part1(input)
 
     assert expected_result == result, "Expected: #{expected_result} / Got: #{result}"
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
-    expected_result = nil
+    input =
+      """
+      MMMSXXMASM
+      MSAMXMSMSA
+      AMXSXMAAMM
+      MSAMASMSMX
+      XMASAMXAMM
+      XXAMMXXAMA
+      SMSMSASXSS
+      SAXAMASAAA
+      MAMMMXMMMM
+      MXMXAXMASX
+      """
+    expected_result = 9
     result = part2(input)
 
     assert expected_result == result, "Expected: #{expected_result} / Got: #{result}"
