@@ -15,21 +15,25 @@ defmodule AdventOfCode.Day07 do
     |> Enum.sum()
   end
 
+  # This could be optimized by failing earlier.
+  #   Since the current_output is always increasing, once it's greater than expected_output we know
+  #   that this test_case is not valid
   defp is_valid?(test_case)
   defp is_valid?({output, [head|tail]}), do: is_valid?(output, head, tail)
   defp is_valid?(expected_output, current_output, other_values)
   defp is_valid?(expected_output, current_output, []), do: expected_output == current_output
+  defp is_valid?(expected_output, current_output, _other_values) when expected_output < current_output, do: false
   defp is_valid?(expected_output, current_output, [other_head| other_tail]) do
-    Kernel.or(
-        is_valid?(expected_output, current_output + other_head, other_tail),
-        is_valid?(expected_output, current_output * other_head, other_tail)
-    )
+    is_valid?(expected_output, current_output + other_head, other_tail) ||
+    is_valid?(expected_output, current_output * other_head, other_tail)
   end
 
+  # Can be optimized as 1 can
   defp is_valid2?(test_case)
   defp is_valid2?({output, [head|tail]}), do: is_valid2?(output, head, tail)
   defp is_valid2?(expected_output, current_output, other_values)
   defp is_valid2?(expected_output, current_output, []), do: expected_output == current_output
+  defp is_valid2?(expected_output, current_output, _other_values) when expected_output < current_output, do: false
   defp is_valid2?(expected_output, current_output, [other_head| other_tail]) do
     is_valid2?(expected_output, current_output + other_head, other_tail) ||
     is_valid2?(expected_output, current_output * other_head, other_tail) ||
