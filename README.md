@@ -1,127 +1,70 @@
-# Advent of Code Elixir Starter
+# My Advent of Code Sollutions
 
-A batteries included starter pack for participating in [Advent of Code](https://www.adventofcode.com) using Elixir!
+Day | Part 1 | Part 2
+:-:|:-:|:-:
+ 1|⭐|⭐
+ 2|⭐|⭐
+ 3|⭐|⭐
+ 4|⭐|⭐
+ 5|⭐|⭐
+ 6| | 
+ 7| | 
+ 8| | 
+ 9| | 
+10| | 
+11| | 
+12| | 
+13| | 
+14| | 
+15| | 
+16| | 
+17| | 
+18| | 
+19| | 
+20| | 
+20| | 
+21| | 
+22| | 
+23| | 
+24| | 
+25| | 
 
-## Usage
+## Setup
 
-There are 25 modules, 25 tests, and 50 mix tasks.
+This is an Elixir project. Make sure you have the Elixir version described at [.tools-version]() installed OR use the [REMOTE_CONTAINER.md] steps to setup the development container locally on through Github Codespaces.
 
-1. Fill in the tests with the example solutions.
-1. Write your implementation.
-1. Fill in the final problem inputs into the mix task and run `mix d01.p1`!
-    - Benchmark your solution by passing the `-b` flag, `mix d01.p1 -b`
+The inputs are automaticaly downloaded, for this you need get your AdventOfCode's session cookie and register it in the project secrets.
 
-```elixir
-defmodule AdventOfCode.Day01 do
-  def part1(args) do
-  end
+### Retrie the session cookie
 
-  def part2(args) do
-  end
-end
+Go to AdventofCode's [website](https://adventofcode.com/), login in into it, and using the browser's development tools get the session cookie ([tip](https://developer.chrome.com/docs/devtools/application/cookies)).
+
+### Register the session cookie
+
+Simple, just edit it into the file `/config/secrets.exs`
+
+## Running the scripts
+
+Use the `mix` task:
+
+```sh
+# Running Day 1 - Part 1 script:
+mix d01.p1
 ```
 
-```elixir
-defmodule AdventOfCode.Day01Test do
-  use ExUnit.Case
+Benchmarking the execution:
 
-  import AdventOfCode.Day01
-
-  @tag :skip # Make sure to remove to run your test.
-  test "part1" do
-    input = nil
-    result = part1(input)
-
-    assert result
-  end
-
-  @tag :skip # Make sure to remove to run your test.
-  test "part2" do
-    input = nil
-    result = part2(input)
-
-    assert result
-  end
-end
+```sh
+# Benchmarking Day 1 - Part 1 script:
+mix d01.p1 -b
 ```
 
-```elixir
-defmodule Mix.Tasks.D01.P1 do
-  use Mix.Task
+## Running tests
 
-  import AdventOfCode.Day01
+No suprise here:
 
-  @shortdoc "Day 01 Part 1"
-  def run(args) do
-    input = AdventOfCode.Input.get!(1, 2020)
-
-    if Enum.member?(args, "-b"),
-      do: Benchee.run(%{part_1: fn -> input |> part1() end}),
-      else:
-        input
-        |> part1()
-        |> IO.inspect(label: "Part 1 Results")
-  end
-end
+```sh
+mix test
 ```
 
-### Optional Automatic Input Retriever
-
-This starter comes with a module that will automatically get your inputs so you
-don't have to mess with copy/pasting. Don't worry, it automatically caches your
-inputs to your machine so you don't have to worry about slamming the Advent of
-Code server. You will need to configure it with your cookie and make sure to
-enable it. You can do this by creating a `config/secrets.exs` file containing
-the following:
-
-```elixir
-import Config
-
-config :advent_of_code, AdventOfCode.Input,
-  allow_network?: true,
-  session_cookie: "..." # yours will be longer
-```
-
-After which, you can retrieve your inputs using the module:
-
-```elixir
-day = 1
-year = 2020
-AdventOfCode.Input.get!(day, year)
-# or just have it auto-detect the current year
-AdventOfCode.Input.get!(7)
-# and if your input somehow gets mangled and you need a fresh one:
-AdventOfCode.Input.delete!(7, 2019)
-# and the next time you `get!` it will download a fresh one -- use this sparingly!
-```
-
-## Installation
-
-```bash
-# clone
-$ git clone git@github.com:mhanberg/advent-of-code-elixir-starter.git advent-of-code
-$ cd advent-of-code
-
-# Reinitialize your git repo
-$ rm -rf .git && rm -rf .github
-$ git init
-```
-### Get started coding with zero configuration
-
-#### Using Visual Studio Code
-
-1. [Install Docker Desktop](https://www.docker.com/products/docker-desktop)
-1. Open project directory in VS Code
-1. Press F1, and select `Remote-Containers: Reopen in Container...`
-1. Wait a few minutes as it pulls image down and builds Dev Conatiner Docker image (this should only need to happen once unless you modify the Dockerfile)
-    1. You can see progress of the build by clicking `Starting Dev Container (show log): Building image` that appears in bottom right corner
-    1. During the build process it will also automatically run `mix deps.get`
-1. Once complete VS Code will connect your running Dev Container and will feel like your doing local development
-1. If you would like to use a specific version of Elixir change the `VARIANT` version in `.devcontainer/devcontainer.json`
-1. If you would like more information about VS Code Dev Containers check out the [dev container documentation](https://code.visualstudio.com/docs/remote/create-dev-container/?WT.mc_id=AZ-MVP-5003399)
-
-#### Compatible with Github Codespaces
-1. If you dont have Github Codespaces beta access, sign up for the beta https://github.com/features/codespaces/signup
-1. On GitHub, navigate to the main page of the repository.
-1. Under the repository name, use the  Code drop-down menu, and select Open with Codespaces.
-1. If you already have a codespace for the branch, click  New codespace.
+> 📚🧑‍💻 Base project structure copied from https://github.com/mhanberg/advent-of-code-elixir-starter.
