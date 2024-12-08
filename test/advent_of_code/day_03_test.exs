@@ -8,7 +8,7 @@ defmodule AdventOfCode.Day03Test do
     expected_result = 161
     result = part1(input)
 
-    assert expected_result == result, "Expected: #{expected_result} / Got: #{result}"
+    assert expected_result == result
   end
 
   test "part2" do
@@ -16,6 +16,6 @@ defmodule AdventOfCode.Day03Test do
     expected_result = 48
     result = part2(input)
 
-    assert expected_result == result, "Expected: #{expected_result} / Got: #{result}"
+    assert expected_result == result
   end
 end

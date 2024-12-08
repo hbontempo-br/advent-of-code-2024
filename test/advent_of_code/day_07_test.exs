@@ -19,7 +19,7 @@ defmodule AdventOfCode.Day07Test do
     expected_result = 3749
     result = part1(input)
 
-    assert expected_result == result, "Expected: #{expected_result} / Got: #{result}"
+    assert expected_result == result
   end
 
   @tag :skip
@@ -39,6 +39,6 @@ defmodule AdventOfCode.Day07Test do
     expected_result = 11387
     result = part2(input)
 
-    assert expected_result == result, "Expected: #{expected_result} / Got: #{result}"
+    assert expected_result == result
   end
 end
