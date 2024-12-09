@@ -3,19 +3,17 @@ defmodule AdventOfCode.Day09Test do
 
   import AdventOfCode.Day09
 
-  @tag :skip
   test "part1" do
-    input = nil
-    expected_result = nil
+    input =  "2333133121414131402"
+    expected_result = 1928
     result = part1(input)
 
     assert expected_result == result
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
-    expected_result = nil
+    input =  "2333133121414131402"
+    expected_result = 2858
     result = part2(input)
 
     assert expected_result == result
