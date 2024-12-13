@@ -9,7 +9,68 @@ defmodule AdventOfCode.Day13 do
     |> Enum.sum()
   end
 
-  def part2(_args) do
+  def part2(args) do
+    args
+    |> parse_input()
+    # |> Enum.map(&adjust_data/1)
+    |> Enum.map(&min_tokens2/1)
+    |> Enum.sum()
+  end
+
+  def min_tokens2(machine_data), do: walk({{0,0},0}, machine_data, Map.new())
+
+  # Dijkstra's Algorithm
+  defp update_estimates({position, value}=_state, machine_data, estimates) do
+    [:a, :b]
+    |> Enum.reduce(
+      Map.delete(estimates, position),
+      fn button, acc ->
+        new_value = value + cost(button)
+        new_position = step(position, button, machine_data)
+        Map.update(acc, new_position, new_value, fn current_value -> min(current_value, new_value) end)
+      end
+    )
+
+  end
+
+  defp next_state(estimates) do
+    estimates
+    |> Map.to_list()
+    |> Enum.min_by(&(elem(&1, 0)))
+  end
+
+  defp status(position, target)
+  defp status(%{x: current_x, y: current_y}, %{x: target_x, y: target_y}) when (current_x == target_x) and (current_y == target_y), do: :success
+  defp status(%{x: current_x, y: current_y}, %{x: target_x, y: target_y}) when (current_x > target_x) or (current_y > target_y), do: :fail
+  defp status(_,_), do: :continue
+
+  defp walk({position, value} = state, machine_data, estimates) do
+    IO.inspect({position, machine_data[:prize]})
+    case status(position, machine_data[:prize]) do
+      :success -> value
+      :fail -> 0
+      :continue ->
+        new_estimates = update_estimates(state, machine_data, estimates)
+        new_state = next_state(new_estimates)
+        walk(new_state, machine_data, new_estimates)
+    end
+  end
+
+  defp cost(button)
+  defp cost(:a), do: @a_cost
+  defp cost(:b), do: @b_cost
+
+  defp step({x, y} = _position, button, machine_data) do
+    {step_x, step_y} = machine_data[button]
+    {x + step_x, y + step_y}
+  end
+
+
+
+  defp adjust_data(machine_data) do
+    {x, y} = machine_data[:prize]
+    new_prize = {x+10000000000000, y+10000000000000}
+    Map.put(machine_data, :prize, new_prize)
   end
 
   defp min_tokens(machine_data) do
