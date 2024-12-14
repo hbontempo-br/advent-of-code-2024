@@ -1,43 +1,90 @@
 defmodule AdventOfCode.Day13 do
+  # Problem:
+  # x_a * a + x_b * b = x_prize
+  # y_a * a + y_b * b = y_prize
+  #
+  # a = (x_prize - x_b * b)/x_a
+  # a = (y_prize - y_b * b)/y_a
+  #
+  # (x_prize - x_b * b)/x_a =  (y_prize - y_b * b)/y_a
+  # (x_prize * y_a) - (y_a * x_b) * b = (y_prize * x_a) - (x_a * y_b) * b
+  # b * [(x_a * y_b) - (y_a * x_b)] = [(y_prize * x_a) - (x_prize * y_a)]
+  #
+  # b = [(y_prize * x_a) - (x_prize * y_a)] / [(x_a * y_b) - (y_a * x_b)]
+  # b1 = (y_prize * x_a) - (x_prize * y_a)
+  # b2 = (x_a * y_b) - (y_a * x_b)
+  # b = b1 / b2
+  #
+  # a = (x_prize - x_b * b)/x_a
+  # a1 = (x_prize - x_b * b)
+  # a2 = x_a
+  # a = a1 / a2
+
   @a_cost 3
   @b_cost 1
 
   def part1(args) do
     args
     |> parse_input()
-    |> Enum.map(&min_tokens/1)
+    |> Enum.map(&clicks/1)
+    |> Enum.map(&filter_results/1)
+    |> Enum.map(&tokens/1)
     |> Enum.sum()
   end
 
-  def part2(_args) do
+  def part2(args) do
+    args
+    |> parse_input()
+    |> Enum.map(&adjust_data/1)
+    |> Enum.map(&clicks/1)
+    |> Enum.map(&tokens/1)
+    |> Enum.sum()
   end
 
-  defp min_tokens(machine_data) do
-    sollutions = machine_data
-      |> possible_sollutions()
-      |> Enum.map(&compute_sollution_cost/1)
+  defp adjust_data(machine_data) do
+    {x, y} = machine_data[:prize]
+    new_prize = {x+10000000000000, y+10000000000000}
+    Map.put(machine_data, :prize, new_prize)
+  end
 
-    case Enum.empty?(sollutions) do
-      true -> 0
-      false -> sollutions |> Enum.min()
+  defp tokens({ a, b } = _result) do
+    (a * @a_cost) + (b * @b_cost)
+  end
+
+  defp filter_results({a, _b}) when a > 100, do: {0, 0}
+  defp filter_results({_a, b}) when b > 100, do: {0, 0}
+  defp filter_results(result), do: result
+
+  defp clicks(machine_data) do
+    { x_a,     y_a     } = machine_data[:a]
+    { x_b,     y_b     } = machine_data[:b]
+    { x_prize, y_prize } = machine_data[:prize]
+
+    b2 = (x_a * y_b) - (y_a * x_b)
+
+    case b2 do
+      0 -> {0, 0}
+      _ ->
+        b1 = (y_prize * x_a) - (x_prize * y_a)
+        case rem(b1, b2) == 0 do
+          false -> {0, 0}
+          true ->
+            b = div(b1, b2)
+
+            a1 = (x_prize - x_b * b)
+            a2 = x_a
+
+            case rem(a1, a2) == 0 do
+              false -> {0, 0}
+              true ->
+                a = div(a1, a2)
+
+                {a, b}
+            end
+
+        end
     end
-  end
 
-  defp compute_sollution_cost(sollution)
-  defp compute_sollution_cost({count_a, count_b}), do: (count_a * @a_cost) + (count_b* @b_cost)
-
-  defp possible_sollutions(machine_data) do
-    for count_a <- 0..100//1, count_b <- 0..100//1, price(count_a, count_b, machine_data), do: {count_a, count_b}
-  end
-
-  defp price(count_a, count_b, machine_data) do
-    %{a: {x_a, y_a}, b: {x_b, y_b}} = machine_data
-    current_x = (count_a * x_a) + (count_b * x_b)
-    current_y = (count_a * y_a) + (count_b * y_b)
-
-    %{prize: {x_target, y_target}} = machine_data
-
-    (current_x == x_target) && (current_y == y_target)
   end
 
   defp parse_input(input) do
