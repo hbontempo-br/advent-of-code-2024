@@ -6,12 +6,12 @@ defmodule Mix.Tasks.D14.P1 do
   @shortdoc "Day 14 Part 1"
   def run(args) do
     input = AdventOfCode.Input.get!(14, 2024)
+    grid = {101, 103}
 
     if Enum.member?(args, "-b"),
-      do: Benchee.run(%{part_1: fn -> input |> part1() end}),
+      do: Benchee.run(%{part_1: fn -> part1(input, grid) end}),
       else:
-        input
-        |> part1()
+        part1(input, grid)
         |> IO.inspect(label: "Part 1 Results")
   end
 end
