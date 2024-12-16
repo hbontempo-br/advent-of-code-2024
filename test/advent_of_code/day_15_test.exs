@@ -23,7 +23,7 @@ defmodule AdventOfCode.Day15Test do
     assert expected_result == result
   end
 
-    test "part1 - big" do
+  test "part1 - big" do
     input =
       """
       ##########
@@ -54,10 +54,32 @@ defmodule AdventOfCode.Day15Test do
     assert expected_result == result
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
-    expected_result = nil
+    input =
+      """
+      ##########
+      #..O..O.O#
+      #......O.#
+      #.OO..O.O#
+      #..O@..O.#
+      #O#..O...#
+      #O..O..O.#
+      #.OO.O.OO#
+      #....O...#
+      ##########
+
+      <vv>^<v^>v>^vv^v>v<>v^v<v<^vv<<<^><<><>>v<vvv<>^v^>^<<<><<v<<<v^vv^v>^
+      vvv<<^>^v^^><<>>><>^<<><^vv^^<>vvv<>><^^v>^>vv<>v<<<<v<^v>^<^^>>>^<v<v
+      ><>vv>v^v^<>><>>>><^^>vv>v<^^^>>v^v^<^^>v^^>v^<^v>v<>>v^v^<v>v^^<^^vv<
+      <<v<^>>^^^^>>>v^<>vvv^><v<<<>^^^vv^<vvv>^>v<^^^^v<>^>vvvv><>>v^<<^^^^^
+      ^><^><>>><>^^<<^^v>>><^<v>^<vv>>v>>>^v><>^v><<<<v>>v<v<v>vvv>^<><<>^><
+      ^>><>^v<><^vvv<^^<><v<<<<<><^v<<<><<<^^<v<^^^><^>>^<v^><<<^>>^v<v^v<v^
+      >^>>^v>vv>^<<^v<>><<><<v<<v><>v<^vv<<<>^^v^>^^>>><<^v>>v^v><^^>>^<>vv^
+      <><^^>^^^<><vvvvv^v<v<<>^v<v>v<<^><<><<><<<^^<<<^<<>><<><^^^>^^<>^>v<>
+      ^^>vv<^v^v<vv>^<><v<^v>^^^>>>^^vvv^>vvv<>>>^<^>>>>>^<<^v>^vvv<>^<><<v>
+      v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^
+      """
+    expected_result = 9021
     result = part2(input)
 
     assert expected_result == result

@@ -10,43 +10,167 @@ defmodule AdventOfCode.Day15 do
     |> compute_gcp()
   end
 
-  def part2(_args) do
+  def part2(args) do
+    args
+    |> parse_input()
+    |> then(
+      fn {robot, map, commands} ->
+        {new_robot, new_map} = enlarge(robot, map)
+        simulate(new_robot, new_map, commands)
+      end
+    )
+    |> compute_gcp()
+  end
+
+  defp enlarge({r, c} = _robot, map) do
+    new_robot = {r, c * 2}
+
+    new_map = map
+      |> Map.to_list()
+      |> Enum.flat_map(
+        fn {{row, column}, object} ->
+          case object do
+            :wall ->
+              [
+                {{row, 2 * column}, :wall},
+                {{row, (2 * column) + 1}, :wall}
+              ]
+            {:box, _} ->
+              blocks = [{row, 2 * column}, {row, (2 * column) + 1}]
+              [
+                {{row, 2 * column}, {:box, blocks}},
+                {{row, (2 * column) + 1}, {:box, blocks}}
+              ]
+
+          end
+        end
+      )
+      |> Map.new()
+
+    {new_robot, new_map}
+  end
+
+  defp print(robot, direction, map) do
+    IO.puts("---------------------")
+
+    {max_row, max_column} = map
+    |> Map.keys()
+    |> Enum.max()
+
+    0..max_row
+    |> Enum.map(
+      fn row ->
+        0..max_column
+        |> Enum.map(
+          fn column ->
+            position = {row, column}
+            case position == robot do
+              true ->
+                case direction do
+                  :up -> "^"
+                  :down -> "v"
+                  :right -> ">"
+                  :left -> "<"
+                  :end -> "X"
+                end
+              false ->
+                case Map.get(map, position, nil) do
+                  nil -> "."
+                  :wall -> "#"
+                  {:box, _} -> "0"
+                end
+
+            end
+          end
+        )
+        |> Enum.join()
+      end
+    )
+    |> Enum.join("\n")
+    |> IO.puts()
+
+    IO.gets("")
+
+    IO.puts("---------------------")
+
+
   end
 
   defp compute_gcp(map) do
     map
-    |> Map.to_list()
-    |> Enum.filter(&(elem(&1,1) == :box))
-    |> Enum.map(&(elem(&1,0)))
+    |> Map.values()
+    |> Enum.filter(
+      fn
+        {:box,_} -> true
+        _ -> false
+      end
+    )
+    |> Enum.map(&(List.first(elem(&1,1))))
+    |> Enum.uniq()
     |> Enum.map(fn {row, column} -> (100 * row) + column end)
     |> Enum.sum()
   end
 
-  defp simulate(robot, map, commands)
-  defp simulate(_robot, map, []), do: map
-  defp simulate(robot, map, [head|tail]) do
-    {new_robot, new_map, _} = walk(robot, map, head)
-    simulate(new_robot, new_map, tail)
+  defp simulate(robot, map, commands, print_steps \\ false)
+  defp simulate(robot, map, [], print_steps) do
+    if print_steps, do: print(robot, :end, map)
+    map
+  end
+  defp simulate(robot, map, [head|tail], print_steps) do
+    if print_steps, do: print(robot, head, map)
+
+    {new_robot, new_map} = walk(robot, map, head)
+    simulate(new_robot, new_map, tail, print_steps)
+  end
+
+  defp move?(position, map, direction) do
+    case Map.get(map, position, nil) do
+      nil -> true
+      :wall -> false
+      {:box, blocks} ->
+        blocks
+        |> Enum.map(&(next(&1,direction)))
+        |> Enum.filter(&(!Enum.member?(blocks,&1)))
+        |> Enum.all?(&(move?(&1, map, direction)))
+    end
+  end
+
+  def move(position, map, direction) do
+    case Map.get(map, position, nil) do
+      nil -> map
+      :wall -> map
+      {:box, blocks} ->
+        new_blocks = Enum.map(blocks, &(next(&1,direction)))
+
+        map1 = new_blocks
+          |> Enum.filter(&(!Enum.member?(blocks,&1)))
+          |> Enum.reduce(
+            map,
+            &(move(&1,&2,direction))
+          )
+
+        map2 = blocks
+          |> Enum.reduce(
+            map1,
+            &(Map.delete(&2,&1))
+          )
+
+        new_map = new_blocks
+          |> Enum.reduce(
+            map2,
+            &(Map.put(&2,&1,{:box, new_blocks}))
+          )
+
+        new_map
+    end
   end
 
   defp walk(position, map, direction) do
     next_position = next(position, direction)
-    do_not_execute_step = fn (map) -> {position, map, false} end
-    execute_step = fn (map) ->
-      on_position = Map.get(map, position)
-      new_map = map
-        |> Map.delete(position)
-        |> Map.put(next_position, on_position)
-      {next_position, new_map, true}
-    end
-    case Map.get(map, next_position, nil) do
-      :wall -> do_not_execute_step.(map)
-      nil -> execute_step.(map)
-      :box ->
-        case walk(next_position, map, direction) do
-          {_, new_map, false} -> do_not_execute_step.(new_map)
-          {_, new_map, true } -> execute_step.(new_map)
-        end
+    case move?(next_position, map, direction) do
+      false -> { position, map }
+      true ->
+        {next_position, move(next_position, map, direction)}
     end
   end
 
@@ -106,7 +230,7 @@ defmodule AdventOfCode.Day15 do
         |> Stream.with_index()
         |> Enum.map(
           fn {val, column} ->
-            {{row, column}, parse_object(val)}
+            {{row, column}, parse_object(val, {row, column})}
           end
         )
       end
@@ -118,9 +242,9 @@ defmodule AdventOfCode.Day15 do
     )
   end
 
-  defp parse_object(str)
-  defp parse_object("#"), do: :wall
-  defp parse_object("O"), do: :box
-  defp parse_object("@"), do: :robot
-  defp parse_object(_), do: nil
+  defp parse_object(str, position )
+  defp parse_object("#", _position), do: :wall
+  defp parse_object("O", position ), do: {:box, [position]}
+  defp parse_object("@", _position), do: :robot
+  defp parse_object(_, _), do: nil
 end
