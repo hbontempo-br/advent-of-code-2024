@@ -9,38 +9,29 @@ defmodule AdventOfCode.Day16 do
 
   defp update_computations(state, score, estimates, visited, map) do
     new_visited = MapSet.put(visited, state)
+    initial_estimates = Map.delete(estimates, state)
 
-    partial_estimates = [
+    new_estimates = [
       { rotate(state, :counterclockwise), score + 1000 },
       { rotate(state, :clockwise       ), score + 1000 },
-      { rotate(state, :inverse         ), score + 2000 }
+      { rotate(state, :inverse         ), score + 2000 },
+      { next(state)                     , score + 1    }
     ]
+    |> Enum.filter(fn {new_state, _} -> !MapSet.member?(visited, new_state) end)
+    |> Enum.filter(fn {new_state, _} -> valid?(new_state, map) end)
     |> Enum.reduce(
-      estimates,
+      initial_estimates,
       fn {new_state, new_score}, acc ->
         Map.update(acc,new_state,new_score,&(min(&1,new_score)))
       end
     )
 
-
-    new_state = next(state)
-    new_estimates = case valid?(new_state, map) do
-      false -> partial_estimates
-      true ->
-        next_score = score+1
-        Map.update(partial_estimates, new_state, next_score, &(min(&1, next_score)))
-    end
-
     { new_estimates, new_visited }
   end
 
-  defp next_state(estimates, visited) do
-    # This is probably VERY slow
-    # If the visited states were removed from estimates on
-    # #update_computations this could speed up this process.
+  defp next_state(estimates) do
     estimates
     |> Map.to_list()
-    |> Enum.filter(&(!MapSet.member?(visited, elem(&1,0))))
     |> Enum.min_by(&(elem(&1, 1)))
   end
 
@@ -58,7 +49,7 @@ defmodule AdventOfCode.Day16 do
   ) when position==end_position, do: score
   defp find_score(state, score, estimates, visited, end_position, map) do
     { new_estimates, new_visited } = update_computations(state, score, estimates, visited, map)
-    { new_state, new_score } = next_state(new_estimates, new_visited)
+    { new_state, new_score } = next_state(new_estimates)
     find_score(new_state, new_score, new_estimates, new_visited, end_position, map)
   end
 
