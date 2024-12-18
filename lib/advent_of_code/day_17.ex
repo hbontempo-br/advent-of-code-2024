@@ -6,7 +6,51 @@ defmodule AdventOfCode.Day17 do
     Enum.join(output, ",")
   end
 
-  def part2(_args) do
+  def part2(args) do
+    # Analysing at the specific program of the input it became apparent:
+    #   - The program is a simple loop (starts, do stuff, output and loop)
+    #   - Register B and C are "reset" every iteration and depends only on the current A value
+    #   - Looks like only the first 3 bits or 6 are important for the output of the loop
+    #
+    # A bit of mesing arround and it became clear a patter:
+    #   - Input (in base 8): ABCDE...
+    #   - Output: ..., f(E,D), f(D,C), f(C,B), f(B,A), f(A)
+    #
+    # With this the strategy for finding the input that gives the output is to construct it
+    # digit by digit (base8).
+    # Idea:
+    #   1. Start with a sing digit (base8) input and get all that result in the last digit of the program.
+    #   2. With digits that passed step1, add another digit to the input and check if the last 2 digits of the output matchs the program
+    #   3. Keep the loop until all the program is mached with the output
+
+    { register, program } = parse_input(args)
+    solutions = find_solutions(register, program)
+    Enum.min(solutions)
+  end
+
+  defp find_solutions(register, program, response \\ "") do
+    reverse_program = Enum.reverse(program)
+    0..7
+    |> Enum.flat_map(
+      fn x ->
+        input_str = response <> Integer.to_string(x, 8)
+        input = String.to_integer(input_str, 8)
+        updated_register = %{register | a: input}
+        output = run_program(updated_register, program)
+        reverse_output = Enum.reverse(output)
+
+        case reverse_output == reverse_program do
+          true -> [input]
+          false ->
+            partial_equal = Enum.zip(reverse_output, reverse_program)
+              |> Enum.all?(&(elem(&1,0)==elem(&1,1)))
+            case partial_equal do
+              false -> []
+              true -> find_solutions(register, program, input_str)
+            end
+        end
+      end
+    )
   end
 
   defp run_program(register,  program)
