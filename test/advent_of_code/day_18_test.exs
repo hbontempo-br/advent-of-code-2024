@@ -3,20 +3,76 @@ defmodule AdventOfCode.Day18Test do
 
   import AdventOfCode.Day18
 
-  @tag :skip
   test "part1" do
-    input = nil
-    expected_result = nil
-    result = part1(input)
+    input =
+      """
+      5,4
+      4,2
+      4,5
+      3,0
+      2,1
+      6,3
+      2,4
+      1,5
+      0,6
+      3,3
+      2,6
+      5,1
+      1,2
+      5,5
+      2,5
+      6,5
+      1,4
+      0,4
+      6,4
+      1,1
+      6,1
+      1,0
+      0,5
+      1,6
+      2,0
+      """
+    dimensions = {6, 6}
+    elapsed_time = 12
+    expected_result = 22
+    result = part1(input, dimensions, elapsed_time)
 
     assert expected_result == result
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
-    expected_result = nil
-    result = part2(input)
+    input =
+      """
+      5,4
+      4,2
+      4,5
+      3,0
+      2,1
+      6,3
+      2,4
+      1,5
+      0,6
+      3,3
+      2,6
+      5,1
+      1,2
+      5,5
+      2,5
+      6,5
+      1,4
+      0,4
+      6,4
+      1,1
+      6,1
+      1,0
+      0,5
+      1,6
+      2,0
+      """
+    dimensions = {6, 6}
+    start = 12
+    expected_result = {6,1}
+    result = part2(input, dimensions, start)
 
     assert expected_result == result
   end
