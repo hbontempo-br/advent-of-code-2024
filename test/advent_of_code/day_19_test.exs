@@ -23,10 +23,21 @@ defmodule AdventOfCode.Day19Test do
     assert expected_result == result
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
-    expected_result = nil
+    input =
+      """
+      r, wr, b, g, bwu, rb, gb, br
+
+      brwrr
+      bggr
+      gbbr
+      rrbgbr
+      ubwu
+      bwurrg
+      brgr
+      bbrgwb
+      """
+    expected_result = 16
     result = part2(input)
 
     assert expected_result == result
