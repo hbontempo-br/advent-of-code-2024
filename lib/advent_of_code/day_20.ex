@@ -1,15 +1,16 @@
 defmodule AdventOfCode.Day20 do
   @all_directions [:up, :down, :left, :right]
 
-  def part1(args, expected_savings \\ 100) do
+  def part1(args), do: execute(args, 100, 2)
+
+  def part2(args), do: execute(args, 100, 20)
+
+  def execute(args, expected_savings, max_distance) do
     args
     |> parse()
     |> then(fn { map, start_position, end_position } -> path_with_steps(map, start_position, end_position) end)
-    |> shortcuts()
+    |> shortcuts(max_distance)
     |> then(&(count_valid(&1, expected_savings)))
-  end
-
-  def part2(_args) do
   end
 
   defp count_valid(shortcut_list, expected_savings) do
@@ -17,25 +18,59 @@ defmodule AdventOfCode.Day20 do
     |> Enum.count(&(elem(&1,0) >= expected_savings))
   end
 
-  defp shortcuts(path) do
+  defp shortcuts(path, max_distance) do
+    distance_map = compute_distance_map(max_distance)
     path_map = Map.new(path)
     path
-    |> Enum.flat_map(
-      fn {position1, step1} ->
-        @all_directions
-        |> Stream.map(&(walk(position1,&1)))
-        |> Stream.filter(&(!Map.has_key?(path_map,&1)))
-        |> Stream.flat_map(
-          fn cheat_position ->
-            @all_directions
-            |> Stream.map(&(walk(cheat_position,&1)))
-            |> Stream.filter(&(Map.has_key?(path_map,&1)))
-            |> Stream.filter(&(&1!=position1))
-            |> Stream.map(&({Map.get(path_map,&1)-step1-2,position1,&1}))
+    |> Stream.flat_map(
+      fn {initial_position, initial_steps} ->
+        { initial_row, initial_column } = initial_position
+        distance_map
+        |> Stream.map(
+          fn { delta_position, delta_steps } ->
+            { delta_row, delta_column } = delta_position
+            final_position = { initial_row+delta_row, initial_column+delta_column }
+            { final_position, delta_steps }
+          end
+        )
+        |> Stream.filter(
+          fn { final_position, _delta_steps } ->
+            Map.has_key?(path_map, final_position)
+          end
+        )
+        |> Stream.map(
+          fn { final_position, delta_steps } ->
+            final_steps = Map.get(path_map, final_position)
+            {final_steps-initial_steps-delta_steps, initial_position, final_position}
           end
         )
       end
     )
+  end
+
+  defp compute_distance_map(distance), do: compute_distance_map([{0,0}], 0, distance, Map.new([{{0,0}, 0}]))
+  defp compute_distance_map(_positions, current_distance, max_distance, map) when current_distance == max_distance, do: Map.to_list(map)
+  defp compute_distance_map(positions, current_distance, max_distance, map) do
+    new_distance = current_distance + 1
+    { new_positions, new_map } = positions
+      |> Enum.flat_map_reduce(
+        map,
+        fn position, acc ->
+          partial_positions = @all_directions
+            |> Enum.map(&(walk(position,&1)))
+            |> Enum.filter(&(!Map.has_key?(acc,&1)))
+            |> Enum.uniq()
+          new_acc = partial_positions
+            |> Enum.reduce(
+              acc,
+              fn partial_position, partial_acc ->
+                Map.update(partial_acc,partial_position,new_distance,&(min(&1,new_distance)))
+              end
+            )
+          {partial_positions, new_acc}
+        end
+      )
+      compute_distance_map(new_positions, new_distance, max_distance, new_map)
   end
 
   defp path_with_steps(map, start_position, end_position)do

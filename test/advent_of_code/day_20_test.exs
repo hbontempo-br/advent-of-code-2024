@@ -23,17 +23,35 @@ defmodule AdventOfCode.Day20Test do
       ###############
       """
     expected_savings = 50
+    max_distance = 2
     expected_result = 1
-    result = part1(input, expected_savings)
+    result = execute(input, expected_savings, max_distance)
 
     assert expected_result == result
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
-    expected_result = nil
-    result = part2(input)
+    input = """
+      ###############
+      #...#...#.....#
+      #.#.#.#.#.###.#
+      #S#...#.#.#...#
+      #######.#.#.###
+      #######.#.#...#
+      #######.#.###.#
+      ###..E#...#...#
+      ###.#######.###
+      #...###...#...#
+      #.#####.#.###.#
+      #.#...#.#.#...#
+      #.#.#.#.#.#.###
+      #...#...#...###
+      ###############
+      """
+      expected_savings = 75
+      max_distance = 20
+      expected_result = 3
+      result = execute(input, expected_savings, max_distance)
 
     assert expected_result == result
   end
