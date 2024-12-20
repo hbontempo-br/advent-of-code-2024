@@ -3,11 +3,28 @@ defmodule AdventOfCode.Day20Test do
 
   import AdventOfCode.Day20
 
-  @tag :skip
   test "part1" do
-    input = nil
-    expected_result = nil
-    result = part1(input)
+    input =
+      """
+      ###############
+      #...#...#.....#
+      #.#.#.#.#.###.#
+      #S#...#.#.#...#
+      #######.#.#.###
+      #######.#.#...#
+      #######.#.###.#
+      ###..E#...#...#
+      ###.#######.###
+      #...###...#...#
+      #.#####.#.###.#
+      #.#...#.#.#...#
+      #.#.#.#.#.#.###
+      #...#...#...###
+      ###############
+      """
+    expected_savings = 50
+    expected_result = 1
+    result = part1(input, expected_savings)
 
     assert expected_result == result
   end
