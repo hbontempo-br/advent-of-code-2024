@@ -3,20 +3,18 @@ defmodule AdventOfCode.Day21Test do
 
   import AdventOfCode.Day21
 
-  @tag :skip
   test "part1" do
-    input = nil
-    expected_result = nil
-    result = part1(input)
-
-    assert expected_result == result
-  end
-
-  @tag :skip
-  test "part2" do
-    input = nil
-    expected_result = nil
-    result = part2(input)
+    input =
+      """
+      029A
+      980A
+      179A
+      456A
+      379A
+      """
+    times = 2
+    expected_result = 126384
+    result = execute(input, times)
 
     assert expected_result == result
   end
