@@ -174,7 +174,10 @@ defmodule AdventOfCode.Day21 do
       |> Enum.map(
         fn code ->
           1..(times+1)
-          |> Enum.reduce(code, fn _, code -> iterate(code) end)
+          |> Enum.reduce(
+            code,
+            fn _, code -> iterate(code) end
+          )
         end
       )
 
@@ -190,12 +193,18 @@ defmodule AdventOfCode.Day21 do
 
   end
 
-  defp iterate(code)
-  defp iterate(code), do: iterate("A", String.codepoints(code), "")
-  defp iterate(current, others, partial_response)
-  defp iterate(_current, [], partial_response), do: partial_response
-  defp iterate(current, [head | tail], partial_response) do
-    iterate(head, tail, partial_response <> @paths[{current, head}])
+  defp iterate(code) do
+    code
+    |> String.codepoints()
+    |> Enum.map_reduce(
+      "A",
+      fn current, previous ->
+        { {previous, current}, current }
+      end
+    )
+    |> then(&(elem(&1, 0)))
+    |> Stream.map(&(@paths[&1]))
+    |> Enum.join()
   end
 
   defp numeric_value(code) do
