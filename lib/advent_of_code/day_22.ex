@@ -3,14 +3,14 @@ defmodule AdventOfCode.Day22 do
   def part1(args, times \\ 2000) do
     args
     |> parse()
-    |> Enum.map(&(secret_number(&1, times)))
+    |> Stream.map(&(secret_number(&1, times)))
     |> Enum.sum()
   end
 
   def part2(args, times \\ 2000) do
     args
     |> parse()
-    |> Enum.map(&(generate_data(&1, times)))
+    |> Stream.map(&(generate_data(&1, times)))
     |> Enum.map(&(generate_price_map(&1)))
     |> merge_prices()
     |> best_deal()
@@ -63,7 +63,7 @@ defmodule AdventOfCode.Day22 do
   defp add_price_key(secret_numbers, queue, partial_response)
   defp add_price_key([], _queue, partial_response) do
     partial_response
-    |> Enum.map(
+    |> Stream.map(
       fn {number, price, delta, price_key} ->
         {number, price, delta, :queue.to_list(price_key)}
       end
