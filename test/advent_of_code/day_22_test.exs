@@ -3,7 +3,7 @@ defmodule AdventOfCode.Day22Test do
 
   import AdventOfCode.Day22
 
-  test "execute" do
+  test "part1 - small" do
     input =
       """
       123
@@ -15,7 +15,7 @@ defmodule AdventOfCode.Day22Test do
     assert expected_result == result
   end
 
-  test "part1" do
+  test "part1 - medium" do
     input =
       """
       1
@@ -29,10 +29,27 @@ defmodule AdventOfCode.Day22Test do
     assert expected_result == result
   end
 
-  @tag :skip
-  test "part2" do
-    input = nil
-    expected_result = nil
+  test "part2 - small" do
+    input =
+      """
+      123
+      """
+    times = 10
+    expected_result = 6
+    result = part2(input, times)
+
+    assert expected_result == result
+  end
+
+  test "part2 - medium" do
+    input =
+      """
+      1
+      2
+      3
+      2024
+      """
+    expected_result = 23
     result = part2(input)
 
     assert expected_result == result
