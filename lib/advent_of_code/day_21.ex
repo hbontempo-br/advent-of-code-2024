@@ -1,215 +1,154 @@
 defmodule AdventOfCode.Day21 do
-  # Logic:
-  #   1. Precompute what inputs are required to push to move from any button to any button
-  #   2. For each code
-  #     2.1 Get inputs required for pushing the code into the numeric keypad
-  #       - Using the values from step q
-  #     2.2 Do N (number of proxy doors) times:
-  #       - Using the precomputed values from step 1 compute the new input
-  #       - Do it 2.2 again
-  #     2.3 Get lenght of the final input
-  #     2.4 Retrieve the numeric part of the code
-  #     2.5 Compute complexity
-  #  3. Sum all
+  # +---+---+---+
+  # | 7 | 8 | 9 |
+  # +---+---+---+
+  # | 4 | 5 | 6 |
+  # +---+---+---+
+  # | 1 | 2 | 3 |
+  # +---+---+---+
+  #     | 0 | A |
+  #     +---+---+
 
-  @paths %{
-    {"A", "0"} => "<A",
-    {"0", "A"} => ">A",
-    {"A", "1"} => "^<<A",
-    {"1", "A"} => ">>vA",
-    {"A", "2"} => "<^A",
-    {"2", "A"} => "v>A",
-    {"A", "3"} => "^A",
-    {"3", "A"} => "vA",
-    {"A", "4"} => "^^<<A",
-    {"4", "A"} => ">>vvA",
-    {"A", "5"} => "<^^A",
-    {"5", "A"} => "vv>A",
-    {"A", "6"} => "^^A",
-    {"6", "A"} => "vvA",
-    {"A", "7"} => "^^^<<A",
-    {"7", "A"} => ">>vvvA",
-    {"A", "8"} => "<^^^A",
-    {"8", "A"} => "vvv>A",
-    {"A", "9"} => "^^^A",
-    {"9", "A"} => "vvvA",
-    {"0", "1"} => "^<A",
-    {"1", "0"} => ">vA",
-    {"0", "2"} => "^A",
-    {"2", "0"} => "vA",
-    {"0", "3"} => "^>A",
-    {"3", "0"} => "<vA",
-    {"0", "4"} => "^<^A",
-    {"4", "0"} => ">vvA",
-    {"0", "5"} => "^^A",
-    {"5", "0"} => "vvA",
-    {"0", "6"} => "^^>A",
-    {"6", "0"} => "<vvA",
-    {"0", "7"} => "^^^<A",
-    {"7", "0"} => ">vvvA",
-    {"0", "8"} => "^^^A",
-    {"8", "0"} => "vvvA",
-    {"0", "9"} => "^^^>A",
-    {"9", "0"} => "<vvvA",
-    {"1", "2"} => ">A",
-    {"2", "1"} => "<A",
-    {"1", "3"} => ">>A",
-    {"3", "1"} => "<<A",
-    {"1", "4"} => "^A",
-    {"4", "1"} => "vA",
-    {"1", "5"} => "^>A",
-    {"5", "1"} => "<vA",
-    {"1", "6"} => "^>>A",
-    {"6", "1"} => "<<vA",
-    {"1", "7"} => "^^A",
-    {"7", "1"} => "vvA",
-    {"1", "8"} => "^^>A",
-    {"8", "1"} => "<vvA",
-    {"1", "9"} => "^^>>A",
-    {"9", "1"} => "<<vvA",
-    {"2", "3"} => ">A",
-    {"3", "2"} => "<A",
-    {"2", "4"} => "<^A",
-    {"4", "2"} => "v>A",
-    {"2", "5"} => "^A",
-    {"5", "2"} => "vA",
-    {"2", "6"} => "^>A",
-    {"6", "2"} => "<vA",
-    {"2", "7"} => "<^^A",
-    {"7", "2"} => "vv>A",
-    {"2", "8"} => "^^A",
-    {"8", "2"} => "vvA",
-    {"2", "9"} => "^^>A",
-    {"9", "2"} => "<vvA",
-    {"3", "4"} => "<<^A",
-    {"4", "3"} => "v>>A",
-    {"3", "5"} => "<^A",
-    {"5", "3"} => "v>A",
-    {"3", "6"} => "^A",
-    {"6", "3"} => "vA",
-    {"3", "7"} => "<<^^A",
-    {"7", "3"} => "vv>>A",
-    {"3", "8"} => "<^^A",
-    {"8", "3"} => "vv>A",
-    {"3", "9"} => "^^A",
-    {"9", "3"} => "vvA",
-    {"4", "5"} => ">A",
-    {"5", "4"} => "<A",
-    {"4", "6"} => ">>A",
-    {"6", "4"} => "<<A",
-    {"4", "7"} => "^A",
-    {"7", "4"} => "vA",
-    {"4", "8"} => "^>A",
-    {"8", "4"} => "<vA",
-    {"4", "9"} => "^>>A",
-    {"9", "4"} => "<<vA",
-    {"5", "6"} => ">A",
-    {"6", "5"} => "<A",
-    {"5", "7"} => "<^A",
-    {"7", "5"} => "v>A",
-    {"5", "8"} => "^A",
-    {"8", "5"} => "vA",
-    {"5", "9"} => "^>A",
-    {"9", "5"} => "<vA",
-    {"6", "7"} => "<<^A",
-    {"7", "6"} => "v>>A",
-    {"6", "8"} => "<^A",
-    {"8", "6"} => "v>A",
-    {"6", "9"} => "^A",
-    {"9", "6"} => "vA",
-    {"7", "8"} => ">A",
-    {"8", "7"} => "<A",
-    {"7", "9"} => ">>A",
-    {"9", "7"} => "<<A",
-    {"8", "9"} => ">A",
-    {"9", "8"} => "<A",
-    {"<", "^"} => ">^A",
-    {"^", "<"} => "v<A",
-    {"<", "v"} => ">A",
-    {"v", "<"} => "<A",
-    {"<", ">"} => ">>A",
-    {">", "<"} => "<<A",
-    {"<", "A"} => ">>^A",
-    {"A", "<"} => "v<<A",
-    {"^", "v"} => "vA",
-    {"v", "^"} => "^A",
-    {"^", ">"} => "v>A",
-    {">", "^"} => "<^A",
-    {"^", "A"} => ">A",
-    {"A", "^"} => "<A",
-    {"v", ">"} => ">A",
-    {">", "v"} => "<A",
-    {"v", "A"} => "^>A",
-    {"A", "v"} => "<vA",
-    {">", "A"} => "^A",
-    {"A", ">"} => "vA",
-    {"A", "A"} => "A",
-    {"1", "1"} => "A",
-    {"2", "2"} => "A",
-    {"3", "3"} => "A",
-    {"4", "4"} => "A",
-    {"5", "5"} => "A",
-    {"6", "6"} => "A",
-    {"7", "7"} => "A",
-    {"8", "8"} => "A",
-    {"9", "9"} => "A",
-    {"0", "0"} => "A",
-    {"<", "<"} => "A",
-    {">", ">"} => "A",
-    {"^", "^"} => "A",
-    {"v", "v"} => "A"
+  @numeric_keypad_tree %{
+    "1" => [            {"4", "^"}, {"2", ">"}            ],
+    "2" => [{"1", "<"}, {"5", "^"}, {"3", ">"}, {"0", "v"}],
+    "3" => [{"2", "<"}, {"6", "^"},             {"A", "v"}],
+    "4" => [            {"7", "^"}, {"5", ">"}, {"1", "v"}],
+    "5" => [{"4", "<"}, {"8", "^"}, {"6", ">"}, {"2", "v"}],
+    "6" => [{"5", "<"}, {"9", "^"},             {"3", "v"}],
+    "7" => [                        {"8", ">"}, {"4", "v"}],
+    "8" => [{"7", "<"},             {"9", ">"}, {"5", "v"}],
+    "9" => [{"8", "<"},                         {"6", "v"}],
+    "0" => [            {"2", "^"}, {"A", ">"}            ],
+    "A" => [{"0", "<"}, {"3", "^"}                        ],
   }
+
+  #     +---+---+
+  #     | ^ | A |
+  # +---+---+---+
+  # | < | v | > |
+  # +---+---+---+
+
+  @directional_keypad_tree %{
+    "^" => [                        {"A", ">"}, {"v", "v"}],
+    "A" => [{"^", "<"},                         {">", "v"}],
+    "<" => [                        {"v", ">"}            ],
+    "v" => [{"<", "<"}, {"^", "^"}, {">", ">"}            ],
+    ">" => [{"v", "<"}, {"A", "^"}                        ],
+  }
+
 
   def part1(args), do: execute(args, 2)
 
   def part2(args), do: execute(args, 25)
 
   def execute(input, times) do
-    codes = input
-      |> String.trim()
-      |> String.split("\n")
-      |> Enum.map(&String.trim/1)
+    codes = get_codes(input)
+    possible_paths = precompute_paths()
 
-    final_inputs = codes
-      |> Enum.map(
-        fn code ->
-          1..(times+1)
-          |> Enum.reduce(
-            code,
-            fn _, code -> iterate(code) end
-          )
-        end
-      )
-
-    lengths = final_inputs |> Enum.map(&String.length/1)
-
-    numeric_values = codes
-      |> Enum.map(&numeric_value/1)
-
-    Enum.zip(lengths, numeric_values)
-    |> Enum.map(fn {x, y} -> x * y end)
-    |> Enum.sum()
+    values = numeric_values(codes)
 
 
   end
 
-  defp iterate(code) do
-    code
-    |> String.codepoints()
-    |> Enum.map_reduce(
-      "A",
-      fn current, previous ->
-        { {previous, current}, current }
+
+  defp compute_code_input_length(code, times, cache) do
+    case cache[{code, times}] do
+      nil ->
+        {path_lengths, partial_cache} = ["A"|code]
+          |> Enum.chunk_every(2,1)
+          |> Enum.map(&List.to_tuple/1)
+          |> Enum.map_reduce(
+            cache,
+            fn path, acc -> compute_path_input_length(path, times-1, acc) end
+          )
+        value = path_lengths |> Enum.sum()
+        new_cache = Map.put(partial_cache, {code, times}, value)
+        { value, new_cache }
+
+      cached_value -> { cached_value, cache }
+    end
+  end
+
+  defp compute_path_input_length(code, times, cache) do
+
+  end
+
+
+
+  defp precompute_paths() do
+    Map.new()
+    |> compute_all_paths(@numeric_keypad_tree)
+    |> compute_all_paths(@directional_keypad_tree)
+       # This may not be correct.
+       # Can the end input be shorter if one of the internal paths is not the
+       # smallest possible?
+    |> only_shortest()
+       # It may be possible to reduce the possible paths even further.
+       # Paths with more "direction changes" are possibly shorter.
+       # Example: "<<v" is probably shorter than "<v<" despite ending in the same position
+  end
+
+  defp only_shortest(path_map) do
+    path_map
+    |> Map.to_list()
+    |> Stream.map(fn {key, paths} -> {key, shortest_paths(paths)} end)
+    |> Map.new()
+  end
+
+  defp shortest_paths(paths) do
+    size = paths
+      |> Stream.map(&Enum.count/1)
+      |> Enum.min()
+
+    paths
+    |> Enum.filter(fn path -> Enum.count(path) == size end)
+  end
+
+  defp compute_all_paths(path_map, tree) do
+    nodes = Map.keys(tree)
+    pairs = for from <- nodes, to <- nodes, do: {from, to}
+    pairs
+    |> Enum.reduce(
+      path_map,
+      fn {from, to}=key, acc ->
+        p = paths(from, to, tree)
+        Map.put(acc, key, p)
       end
     )
-    |> then(&(elem(&1, 0)))
-    |> Stream.map(&(@paths[&1]))
-    |> Enum.join()
+  end
+
+  defp paths(from, to, tree), do: paths(from, to, tree, [from])
+  defp paths(from, to, tree, previous)
+  defp paths(from, to, _tree, _previous) when from == to, do: [["A"]]
+  defp paths(from, to, tree, previous) do
+    tree
+    |> Map.get(from)
+    |> Stream.filter(fn {value, _direction} -> !Enum.member?(previous, value) end)
+    |> Enum.flat_map(
+      fn {value, direction} ->
+        paths(value, to, tree, [value|previous])
+        |> Enum.map( &([direction|&1]))
+      end
+    )
+  end
+
+  defp numeric_values(codes) do
+    Enum.map(codes, &numeric_value/1)
   end
 
   defp numeric_value(code) do
     code
-    |> String.slice(0..2)
+    |> Enum.slice(0..-2//1)
+    |> Enum.join()
     |> String.to_integer()
+  end
+
+  defp get_codes(input) do
+    input
+    |> String.trim()
+    |> String.split("\n")
+    |> Stream.map(&String.trim/1)
+    |> Enum.map(&String.codepoints/1)
   end
 end
