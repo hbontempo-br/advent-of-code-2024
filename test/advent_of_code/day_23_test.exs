@@ -45,10 +45,17 @@ defmodule AdventOfCode.Day23Test do
     assert expected_result == result
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
-    expected_result = nil
+    input =
+      """
+      ka-co
+      ta-co
+      de-co
+      ta-ka
+      de-ta
+      ka-de
+      """
+    expected_result = "co,de,ka,ta"
     result = part2(input)
 
     assert expected_result == result

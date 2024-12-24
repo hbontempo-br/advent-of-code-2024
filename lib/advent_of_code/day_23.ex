@@ -6,7 +6,38 @@ defmodule AdventOfCode.Day23 do
     |> Enum.count()
   end
 
-  def part2(_args) do
+  def part2(args) do
+    args
+    |> parse()
+    |> largest_network()
+    |> network_password()
+  end
+
+  defp network_password(network) do
+    network
+    |> Enum.sort()
+    |> Enum.join(",")
+  end
+
+  defp largest_network(network_map) do
+    initial_networks = network_map
+      |> Map.to_list()
+      |> Enum.map(
+        fn {computer, connected_computers} ->
+          {MapSet.new([computer]), connected_computers}
+        end
+      )
+    largest_network(initial_networks, network_map)
+  end
+  defp largest_network(networks, network_map) do
+    # Is this condition enought? Maybe the network is not fully grown...
+    case Enum.count(networks) do
+      1 ->
+        [{computers, _}] = networks
+        computers
+      _ ->
+        largest_network(grow_networks(networks, network_map), network_map)
+    end
   end
 
   defp find_networks(network_map) do
