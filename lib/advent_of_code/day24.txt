@@ -1,0 +1,262 @@
+y00 XOR x00 -> z00
+x00 AND y00 -> mcg
+
+x01 XOR y01 -> vcn
+mcg XOR vcn -> z01
+y01 AND x01 -> gbh
+mcg AND vcn -> ndb
+gbh OR ndb -> pqk
+
+y02 XOR x02 -> srh
+pqk XOR srh -> z02
+x02 AND y02 -> rgb
+srh AND pqk -> kkk
+kkk OR rgb -> gkk
+
+y03 XOR x03 -> pvt
+gkk XOR pvt -> z03
+x03 AND y03 -> ngs
+pvt AND gkk -> pwn
+ngs OR pwn -> vfk
+
+x04 XOR y04 -> wfj
+wfj XOR vfk -> z04
+y04 AND x04 -> ggg
+wfj AND vfk -> pdr
+pdr OR ggg -> mvq
+
+x05 XOR y05 -> chf
+mvq XOR chf -> z05
+x05 AND y05 -> ntm
+chf AND mvq -> pnn
+pnn OR ntm -> ttr
+
+x06 XOR y06 -> kvq
+kvq XOR ttr -> z06
+y06 AND x06 -> qjc
+kvq AND ttr -> cph
+cph OR qjc -> nff
+
+x07 XOR y07 -> dgg
+nff XOR dgg -> z07
+y07 AND x07 -> dvs
+dgg AND nff -> gqk
+gqk OR dvs -> dct
+
+x08 XOR y08 -> hsg
+hsg XOR dct -> z08
+y08 AND x08 -> vdk
+dct AND hsg -> cdm
+vdk OR cdm -> sbr
+
+x09 XOR y09 -> mwb
+mwb XOR sbr -> z09
+y09 AND x09 -> trv
+mwb AND sbr -> sdg
+sdg OR trv -> dvh
+
+x10 XOR y10 -> wjp
+wjp XOR dvh -> z10
+y10 AND x10 -> kkg
+wjp AND dvh -> bdf
+kkg OR bdf -> fgd
+
+x11 XOR y11 -> thj
+thj XOR fgd -> z11
+y11 AND x11 -> hqj
+thj AND fgd -> ngq
+hqj OR ngq -> qgg
+
+y12 XOR x12 -> bmw
+qgg XOR bmw -> z12
+y12 AND x12 -> dvc
+qgg AND bmw -> jwp
+jwp OR dvc -> qhc
+
+x13 XOR y13 -> kdm
+kdm XOR qhc -> z13
+y13 AND x13 -> rgp
+qhc AND kdm -> crm
+rgp OR crm -> fdh
+
+x14 XOR y14 -> fsg
+fsg XOR fdh -> z14
+x14 AND y14 -> kjf
+fdh AND fsg -> ftk
+kjf OR ftk -> sqn
+
+y15 XOR x15 -> fmd
+sqn XOR fmd -> z15
+x15 AND y15 -> chh
+sqn AND fmd -> mqf
+chh OR mqf -> pht
+
+x16 XOR y16 -> rqv
+rqv XOR pht -> z16
+x16 AND y16 -> gqt
+rqv AND pht -> nqp
+nqp OR gqt -> ddt
+
+y17 XOR x17 -> nhg
+ddt XOR nhg -> z17
+y17 AND x17 -> fjk
+ddt AND nhg -> vft
+vft OR fjk -> jhc
+
+y18 XOR x18 -> hrm
+hrm XOR jhc -> z18
+y18 AND x18 -> hsk
+hrm AND jhc -> kwq
+hsk OR kwq -> kdv
+
+y19 XOR x19 -> ntj
+kdv XOR ntj -> z19
+x19 AND y19 -> scf
+kdv AND ntj -> wtw
+wtw OR scf -> vcp
+
+y20 XOR x20 -> khd
+khd XOR vcp -> z20
+x20 AND y20 -> ssw
+vcp AND khd -> dsj
+ssw OR dsj -> vcj
+
+x21 XOR y21 -> jsq
+jsq XOR vcj -> shh -> SWAP shh for z21
+y21 AND x21 -> kcq
+jsq AND vcj -> z21 -> SWAP z21 for shh
+shh OR kcq -> sjk
+
+y22 XOR x22 -> dpc
+sjk XOR dpc -> z22
+y22 AND x22 -> ksd
+dpc AND sjk -> hqw
+ksd OR hqw -> jvv
+
+y23 XOR x23 -> jww
+jvv XOR jww -> z23
+x23 AND y23 -> cpq
+jvv AND jww -> kff
+kff OR cpq -> pvw
+
+y24 XOR x24 -> pww
+pww XOR pvw -> z24
+x24 AND y24 -> dcj
+pww AND pvw -> mvv
+mvv OR dcj -> chn
+
+y25 XOR x25 -> jjk
+chn XOR jjk -> z25
+x25 AND y25 -> thm
+chn AND jjk -> ggv
+ggv OR thm -> skh
+
+y26 XOR x26 -> dtk -> SWAP dtk for vgs
+skh XOR vgs -> z26
+y26 AND x26 -> vgs -> SWAP vgs for dtk
+vgs AND skh -> bmg
+bmg OR dtk -> qcr
+
+y27 XOR x27 -> jgd
+jgd XOR qcr -> z27
+y27 AND x27 -> fjc
+qcr AND jgd -> wdj
+fjc OR wdj -> jnh
+
+y28 XOR x28 -> bdw
+jnh XOR bdw -> z28
+y28 AND x28 -> kjs
+jnh AND bdw -> qhb
+qhb OR kjs -> tsf
+
+y29 XOR x29 -> kpk
+tsf XOR kpk -> z29
+y29 AND x29 -> ghw
+tsf AND kpk -> tjr
+tjr OR ghw -> tcv
+
+y30 XOR x30 -> kbg
+kbg XOR tcv -> z30
+y30 AND x30 -> kfg
+tcv AND kbg -> ccb
+ccb OR kfg -> tqd
+
+y31 XOR x31 -> hkv
+tqd XOR hkv -> z31
+y31 AND x31 -> sqr
+hkv AND tqd -> ckb
+ckb OR sqr -> dwf
+
+y32 XOR x32 -> rbf
+dwf XOR rbf -> z32
+y32 AND x32 -> pdf
+rbf AND dwf -> npr
+pdf OR npr -> vkp
+
+x33 XOR y33 -> jqp
+vkp XOR jqp -> dqr -> SWAP dqr for z33
+x33 AND y33 -> mtw
+jqp AND vkp -> fdv
+mtw OR fdv -> z33 -> SWAP z33 for dqr
+
+y34 XOR x34 -> wnt
+dqr XOR wnt -> z34
+x34 AND y34 -> fbd
+dqr AND wnt -> cgq
+fbd OR cgq -> fqq
+
+y35 XOR x35 -> bhc
+bhc XOR fqq -> z35
+x35 AND y35 -> drq
+bhc AND fqq -> jvk
+jvk OR drq -> smj
+
+y36 XOR x36 -> tww
+tww XOR smj -> z36
+x36 AND y36 -> sbn
+smj AND tww -> ddk
+sbn OR ddk -> dds
+
+x37 XOR y37 -> fpb
+fpb XOR dds -> z37
+x37 AND y37 -> nkq
+fpb AND dds -> fqd
+nkq OR fqd -> pnh
+
+x38 XOR y38 -> tdj
+tdj XOR pnh -> z38
+y38 AND x38 -> nmt
+tdj AND pnh -> jrg
+nmt OR jrg -> sjq
+
+x39 XOR y39 -> gqn
+gqn XOR sjq -> pfw -> SWAP pfw for z39
+x39 AND y39 -> z39 -> SWAP z39 for pfw
+gqn AND sjq -> kdd
+pfw OR kdd -> jqk
+
+jqk XOR vnc -> z40
+x42 XOR y42 -> vvg
+pgd AND wjd -> dqf
+sjr OR jrk -> tfq
+y40 AND x40 -> tcf
+hhp AND hhg -> kbm
+y43 AND x43 -> gvv
+y44 XOR x44 -> hhg
+wsw OR dqf -> pvj
+hhg XOR hhp -> z44
+y41 AND x41 -> wsw
+tcf OR cpp -> pgd
+x44 AND y44 -> spc
+bns OR gvv -> hhp
+pgd XOR wjd -> z41
+x43 XOR y43 -> qtr
+vvg AND pvj -> sjr
+qtr AND tfq -> bns
+qtr XOR tfq -> z43
+jqk AND vnc -> cpp
+kbm OR spc -> z45
+pvj XOR vvg -> z42
+y42 AND x42 -> jrk
+y41 XOR x41 -> wjd
+y40 XOR x40 -> vnc
